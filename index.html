@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тестировщик Профи</title>
-</head>
-<style>
-    * {
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тестировщик Профи | Платформа ручного тестирования</title>
+    <style>
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -21,34 +20,107 @@
             color: #333;
         }
 
-        /* Стартовый экран */
+        /* Стартовый экран — теперь с приветственным текстом и названием */
         #start-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #f5f5f7;
+            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef4 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            transition: opacity 0.3s ease;
         }
 
         #start-screen.hidden {
             display: none;
         }
 
+        .start-card {
+            background: white;
+            border-radius: 32px;
+            padding: 48px 40px;
+            max-width: 560px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(2px);
+            transition: transform 0.2s;
+        }
+
+        .start-card:hover {
+            transform: scale(1.01);
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #10b981, #059669);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .site-name-large {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .site-name-large span {
+            background-color: #10b98110;
+            padding: 4px 14px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #10b981;
+            border: 1px solid #10b98130;
+        }
+
+        .greeting-text {
+            font-size: 1.1rem;
+            color: #475569;
+            margin: 20px 0 28px 0;
+            line-height: 1.5;
+            border-left: 4px solid #10b981;
+            padding-left: 20px;
+            text-align: left;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px 20px;
+        }
+
         .start-button {
-            padding: 20px 40px;
-            font-size: 24px;
-            font-weight: bold;
+            padding: 16px 36px;
+            font-size: 1.3rem;
+            font-weight: 700;
             background-color: #10b981;
             color: white;
-            border: 4px solid #10b981;
-            border-radius: 12px;
+            border: none;
+            border-radius: 60px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+            margin-top: 12px;
+            width: 80%;
+        }
+
+        .start-button:hover {
+            background-color: #059669;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -8px rgba(16, 185, 129, 0.5);
         }
 
         /* Основной контент */
@@ -80,6 +152,7 @@
             font-size: 30px;
             font-weight: bold;
             color: #10b981;
+            letter-spacing: -0.5px;
         }
 
         .nav-menu {
@@ -97,6 +170,7 @@
             font-size: 14px;
             font-weight: 500;
             color: #333;
+            transition: all 0.15s;
         }
 
         .nav-button.active {
@@ -131,6 +205,11 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.1s linear;
+        }
+
+        .finish-button:active {
+            transform: scale(0.96);
         }
 
         /* Основной контейнер */
@@ -165,6 +244,7 @@
             border: 4px solid #10b981;
             border-radius: 12px;
             padding: 25px;
+            transition: all 0.2s ease;
         }
 
         .test-card h3 {
@@ -193,11 +273,13 @@
             border-radius: 8px;
             font-size: 14px;
             background-color: #f5f5f7;
+            transition: 0.1s;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
         }
 
         /* Статус */
@@ -220,6 +302,7 @@
         .status-label {
             color: #666;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .status-label.tested {
@@ -238,6 +321,7 @@
             font-size: 14px;
             margin-right: 8px;
             margin-bottom: 8px;
+            transition: 0.1s;
         }
 
         .action-button.primary {
@@ -368,52 +452,75 @@
             .test-grid {
                 grid-template-columns: 1fr;
             }
+            .start-card {
+                padding: 32px 20px;
+            }
+            .welcome-title {
+                font-size: 2.2rem;
+            }
         }
+
+        /* Эффект при наведении на карточки */
         .container .test-card {
-  transition: filter 0.3s ease-out, transform 0.3s ease-out, z-index 0.1s ease-out;
-  transform: scale(1);
-  filter: brightness(100%);
-  z-index: 1;
-}
+            transition: filter 0.3s ease-out, transform 0.3s ease-out, z-index 0.1s ease-out;
+            transform: scale(1);
+            filter: brightness(100%);
+            z-index: 1;
+        }
 
-.container:hover .test-card {
-  transform: scale(0.95);
-}
+        .container:hover .test-card {
+            transform: scale(0.95);
+        }
 
-.container:hover .test-card:hover {
-  transform: scale(1.12) translateY(-5px);
-  z-index: 10;
-}
-
-</style>
+        .container:hover .test-card:hover {
+            transform: scale(1.12) translateY(-5px);
+            z-index: 10;
+            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
 <body>
+    <!-- СТАРТОВЫЙ ЭКРАН -->
     <div id="start-screen">
-        <button class="start-button" onclick="startTesting()">Начать ручное тестирование</button>
+        <div class="start-card">
+            <div class="welcome-title">Добро пожаловать!</div>
+            <div class="site-name-large">
+                📟 TPM <span>Тестировщик Профи</span>
+            </div>
+            <div class="greeting-text">
+                <strong>«Тестировщик Профи»</strong> — ваш надежный тренажер для ручного тестирования веб-форм, 
+                элементов интерфейса и сценариев. <br><br>
+                Проверяйте поля, списки, кнопки и фиксируйте результат.  
+                Отслеживайте прогресс и завершайте сессию с итоговой статистикой.
+            </div>
+            <button class="start-button" onclick="startTesting()">Начать ручное тестирование</button>
+        </div>
     </div>
 
+    <div id="app-content">
         <div class="header">
             <div class="logo">
-                TPM
+                📟 TPM | Тестировщик Профи
             </div>
             <div class="nav-menu">
-                <button class="nav-button active" onclick="switchPage(1)">Формы</button>
-                <button class="nav-button" onclick="switchPage(2)">Списки</button>
-                <button class="nav-button" onclick="switchPage(3)">Кнопки</button>
-                <button class="nav-button" onclick="switchPage(4)">Дополнительно</button>
+                <button class="nav-button active" onclick="switchPage(1)">📄 Формы</button>
+                <button class="nav-button" onclick="switchPage(2)">📋 Списки</button>
+                <button class="nav-button" onclick="switchPage(3)">🔘 Кнопки</button>
+                <button class="nav-button" onclick="switchPage(4)">⚙️ Дополнительно</button>
             </div>
             <div class="progress-info">
                 <div class="progress-stats">
                     Прогресс: <strong id="progress-percent">0%</strong> | 
                     <span id="tested-count">0</span>/<span id="total-count">0</span>
                 </div>
-                <button class="finish-button" onclick="showFinishModal()">Завершить</button>
+                <button class="finish-button" onclick="showFinishModal()">🏁 Завершить</button>
             </div>
         </div>
 
         <div class="container">
-            <!-- Формы ввода -->
+            <!-- Страница 1: Формы ввода -->
             <div id="page1" class="page active">
-                <h2 class="section-title">Формы ввода</h2>
+                <h2 class="section-title">📝 Формы ввода</h2>
                 <div class="test-grid">
                     <div class="test-card" data-test-id="text-input">
                         <h3>Текстовое поле</h3>
@@ -477,9 +584,9 @@
                 </div>
             </div>
 
-            <!-- Выпадающие списки -->
+            <!-- Страница 2: Выпадающие списки -->
             <div id="page2" class="page">
-                <h2 class="section-title">Выпадающие списки</h2>
+                <h2 class="section-title">🔽 Выпадающие списки</h2>
                 <div class="test-grid">
                     <div class="test-card" data-test-id="simple-select">
                         <h3>Обычный список</h3>
@@ -561,9 +668,9 @@
                 </div>
             </div>
 
-            <!-- Кнопки и ссылки -->
+            <!-- Страница 3: Кнопки и ссылки -->
             <div id="page3" class="page">
-                <h2 class="section-title">Кнопки и ссылки</h2>
+                <h2 class="section-title">🔌 Кнопки и ссылки</h2>
                 <div class="test-grid">
                     <div class="test-card" data-test-id="simple-button">
                         <h3>Обычные кнопки</h3>
@@ -604,9 +711,9 @@
                 </div>
             </div>
 
-            <!-- Дополнительные элементы -->
+            <!-- Страница 4: Дополнительные элементы -->
             <div id="page4" class="page">
-                <h2 class="section-title">Дополнительные элементы</h2>
+                <h2 class="section-title">📅 Дополнительные элементы</h2>
                 <div class="test-grid">
                     <div class="test-card" data-test-id="date-input">
                         <h3>Выбор даты</h3>
@@ -648,15 +755,15 @@
         </div>
 
         <div class="footer">
-            <p>Тестировщик Про Макс 2026</p>
+            <p>📟 Тестировщик Профи — тренажёр ручного тестирования V3.0</p>
         </div>
+    </div>
 
-    <!-- окно завершения -->
+    <!-- Модальное окно завершения -->
     <div class="modal" id="finish-modal">
         <div class="modal-content">
-            <h3>Завершение тестирования</h3>
-            <p>Вы уверены, что хотите завершить?</p>
-            
+            <h3>🏁 Завершение тестирования</h3>
+            <p>Вы уверены, что хотите завершить сессию?</p>
             <div class="result-details">
                 <div class="result-percent" id="final-percent">0%</div>
                 <div class="result-stats">
@@ -664,7 +771,6 @@
                 </div>
                 <div style="margin-top: 15px; color: #666;" id="completion-message"></div>
             </div>
-            
             <div class="modal-buttons">
                 <button class="modal-button cancel" onclick="closeModal()">Продолжить</button>
                 <button class="modal-button confirm" onclick="completeTesting()">Завершить</button>
@@ -677,25 +783,19 @@
         let testedTests = 0;
         let currentPage = 1;
         
-        const testCards = [];
-
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.test-card');
-            cards.forEach(card => {
-                testCards.push(card);
-            });
-            
-            totalTests = testCards.length;
+            totalTests = cards.length;
             document.getElementById('total-count').textContent = totalTests;
             document.getElementById('final-total').textContent = totalTests;
-            
             updateProgress();
         });
 
+        // Старт: скрыть стартовый экран, показать основной интерфейс, сброс прогресса (чистый старт)
         function startTesting() {
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('app-content').classList.add('visible');
-            resetProgress();
+            resetProgress();   // полностью обнуляем все поля и чекбоксы тестирования
         }
 
         function switchPage(pageNumber) {
@@ -703,25 +803,20 @@
             document.getElementById('page2').classList.remove('active');
             document.getElementById('page3').classList.remove('active');
             document.getElementById('page4').classList.remove('active');
-            
             document.getElementById(`page${pageNumber}`).classList.add('active');
             
             const navButtons = document.querySelectorAll('.nav-button');
-            navButtons.forEach((button, index) => {
-                if (index + 1 === pageNumber) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
+            navButtons.forEach((button, idx) => {
+                if (idx + 1 === pageNumber) button.classList.add('active');
+                else button.classList.remove('active');
             });
-            
             currentPage = pageNumber;
         }
 
+        // при взаимодействии с полем/кнопкой/селектом – автоматически отмечаем чекбокс "протестировано"
         function updateTestStatus(element) {
             const card = element.closest('.test-card');
             if (!card) return;
-            
             const checkbox = card.querySelector('.status-checkbox');
             if (checkbox && !checkbox.checked) {
                 checkbox.checked = true;
@@ -729,89 +824,91 @@
             }
         }
 
+        // общий подсчет прогресса, обновление UI и модальных данных
         function updateProgress() {
             const checkboxes = document.querySelectorAll('.test-card .status-checkbox');
             testedTests = 0;
+            checkboxes.forEach(cb => { if (cb.checked) testedTests++; });
             
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    testedTests++;
-                }
-            });
-            
-            const percent = Math.round((testedTests / totalTests) * 100);
-            
+            const percent = totalTests === 0 ? 0 : Math.round((testedTests / totalTests) * 100);
             document.getElementById('progress-percent').textContent = percent + '%';
             document.getElementById('tested-count').textContent = testedTests;
-            
             document.getElementById('final-tested').textContent = testedTests;
             document.getElementById('final-percent').textContent = percent + '%';
             
             let message = '';
-            if (percent === 100) {
-                message = 'Отлично! Вы протестировали все элементы.';
-            } else if (percent >= 75) {
-                message = 'Хороший результат. Протестировано больше 75%.';
-            } else if (percent >= 50) {
-                message = 'Средний результат. Протестировано больше половины.';
-            } else if (percent >= 25) {
-                message = 'Начало положено. Продолжайте тестирование!';
-            } else {
-                message = 'Вы только начали. Тестируйте больше элементов!';
-            }
+            if (percent === 100) message = '🎉 Отлично! Вы протестировали все элементы.';
+            else if (percent >= 75) message = '🔥 Отличный прогресс! Протестировано больше 75%.';
+            else if (percent >= 50) message = '👍 Хороший результат, больше половины готово.';
+            else if (percent >= 25) message = '💪 Хорошее начало, продолжайте тестирование!';
+            else message = '✨ Начните взаимодействие с элементами, чтобы отмечать их.';
             document.getElementById('completion-message').textContent = message;
             
+            // обновление текста у лейблов
             checkboxes.forEach(checkbox => {
-                const label = checkbox.closest('.test-status').querySelector('.status-label');
-                if (checkbox.checked) {
-                    label.classList.add('tested');
-                    label.textContent = 'Протестировано';
-                } else {
-                    label.classList.remove('tested');
-                    label.textContent = 'Отметить как протестировано';
+                const labelSpan = checkbox.closest('.test-status')?.querySelector('.status-label');
+                if (labelSpan) {
+                    if (checkbox.checked) {
+                        labelSpan.classList.add('tested');
+                        labelSpan.textContent = '✅ Протестировано';
+                    } else {
+                        labelSpan.classList.remove('tested');
+                        labelSpan.textContent = '📌 Отметить как протестировано';
+                    }
                 }
             });
         }
 
+        // полный сброс: очистка всех полей, чекбоксов, радио, select и статусов тестирования
         function resetProgress() {
-            const checkboxes = document.querySelectorAll('.test-card .status-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            // сброс чекбоксов "отметить протестировано"
+            const statusCheckboxes = document.querySelectorAll('.test-card .status-checkbox');
+            statusCheckboxes.forEach(cb => { cb.checked = false; });
             
-            const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), select, textarea');
-            inputs.forEach(input => {
-                if (input.type !== 'checkbox' && input.type !== 'radio') {
+            // очистка всех input (кроме type checkbox/radio, которые мы не трогаем для статуса)
+            const allInputs = document.querySelectorAll('input:not(.status-checkbox), select, textarea');
+            allInputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else if (input.type === 'file') {
+                    input.value = '';
+                } else {
                     input.value = '';
                 }
             });
             
-            const radios = document.querySelectorAll('input[type="radio"]');
-            radios.forEach(radio => radio.checked = false);
+            // отдельно сбрасываем select multiple
+            const selects = document.querySelectorAll('select');
+            selects.forEach(sel => { sel.selectedIndex = -1; if(sel.multiple) Array.from(sel.options).forEach(opt => opt.selected = false); });
             
-            const checkboxes2 = document.querySelectorAll('input[type="checkbox"]:not(.status-checkbox)');
-            checkboxes2.forEach(checkbox => checkbox.checked = false);
+            const radioGroups = document.querySelectorAll('input[type="radio"]');
+            radioGroups.forEach(radio => radio.checked = false);
             
-            updateProgress();
-            switchPage(1);
+            const normalCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(.status-checkbox)');
+            normalCheckboxes.forEach(cb => cb.checked = false);
+            
+            updateProgress();   // обновляем статистику после сброса
+            switchPage(1);      // возвращаем на первую вкладку для удобства
         }
-
+        
         function showFinishModal() {
-            updateProgress();
+            updateProgress();   // актуализируем данные перед показом
             document.getElementById('finish-modal').classList.add('active');
         }
-
+        
         function closeModal() {
             document.getElementById('finish-modal').classList.remove('active');
         }
-
+        
+        // Завершение: закрываем модалку, сбрасываем всё, возвращаем стартовый экран с приветствием
         function completeTesting() {
+            // маленькая задержка для плавности, затем возврат на начальный экран
             setTimeout(() => {
                 document.getElementById('finish-modal').classList.remove('active');
-                resetProgress();
+                resetProgress();                       // чистим все данные тестирования
                 document.getElementById('app-content').classList.remove('visible');
                 document.getElementById('start-screen').classList.remove('hidden');
-            }, 500);
+            }, 200);
         }
     </script>
 </body>
